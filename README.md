@@ -1,6 +1,6 @@
 # MovieSearchPJ
 ## 영화 검색 App  
-> 1. 
+> 1. 제목 검색을 통한 영화 정보 제공, 검색기록 저장, 상세보기가 가능한 App   
 > 개발 플랫폼:  Android Studio Dolphin, API Level 33
 ------------
 ### 개발환경
@@ -10,7 +10,6 @@
 + Language : Kotlin 
 ------------
 ### Skill & Library
-+ Materail3 UI/UX 
 + Room DB 
 + OkHttp4/Retrofit 활용 Coroutine을 이용한 REST 처리 
 ------------
@@ -18,7 +17,8 @@
 + naver 영화 검색 api
 ------------  
 ### 주요기능
-+ 영화 검색
++ 영화 검색 
++ 검색기록 저장 
 ------------
 ### 실행사진
 
