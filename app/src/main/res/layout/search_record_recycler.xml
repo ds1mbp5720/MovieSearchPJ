@@ -2,19 +2,22 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        app:strokeWidth="1dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/teal_700"
         android:layout_gravity="center"
         android:layout_margin="5dp">
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/poi_name"
+            android:id="@+id/record_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:text="검색 기록"
             android:textSize="20dp"
             android:gravity="center"

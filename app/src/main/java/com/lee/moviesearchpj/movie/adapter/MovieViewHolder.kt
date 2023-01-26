@@ -25,8 +25,8 @@ class MovieViewHolder(private val binding: MovieInfoRecyclerBinding): RecyclerVi
     fun setListener(link: String) = with(binding){
         root.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
-            val uri: Uri = Uri.parse(link)
-            intent.data = uri
+            Log.e(TAG,"$link")
+            intent.data = Uri.parse("$link/")
             startActivity(itemView.context,intent,null)
         }
     }

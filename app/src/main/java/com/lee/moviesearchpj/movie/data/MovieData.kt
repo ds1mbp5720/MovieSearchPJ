@@ -1,8 +1,5 @@
 package com.lee.moviesearchpj.movie.data
 
-
-import com.google.gson.annotations.SerializedName
-
 data class MovieData(
     val display: Int,
     val items: List<Item>,

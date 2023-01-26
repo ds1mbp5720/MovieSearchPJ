@@ -1,20 +1,26 @@
-package com.lee.moviesearchpj.movie
+package com.lee.moviesearchpj.movie.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lee.moviesearchpj.movie.data.MovieData
+import com.lee.moviesearchpj.movie.repository.MovieRepository
+import com.lee.moviesearchpj.serachrecord.data.Record
+import com.lee.moviesearchpj.serachrecord.repository.RecordRepository
 import kotlinx.coroutines.*
 
 
-class MovieViewModel(private val repository: MovieRepository):ViewModel(){
+class MovieViewModel(private val repository: MovieRepository, private val application: Application):ViewModel(){
     val movieList = MutableLiveData<MovieData>() // rest api 저장
     val errorMessage = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
+    private val recordRepository: RecordRepository = RecordRepository(application)
     private var job : Job? = null
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("코루틴내 예외: ${throwable.localizedMessage}")
     }
+    // api 정보 수신 함수
     fun getAllMovieFromViewModel(text: String, start:Int){
         job = CoroutineScope(Dispatchers.IO).launch(exceptionHandler) {
             isLoading.postValue(true)
@@ -28,6 +34,10 @@ class MovieViewModel(private val repository: MovieRepository):ViewModel(){
                 }
             }
         }
+    }
+    // room 검색기록 저장 함수
+    fun insertRecord(searchText: Record){
+        recordRepository.insertRecord(searchText)
     }
 
     private fun onError(message: String){

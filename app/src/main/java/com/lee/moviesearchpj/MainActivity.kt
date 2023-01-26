@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lee.moviesearchpj.databinding.ActivityMainBinding
 import com.lee.moviesearchpj.movie.SearchMovieFragment
-import com.lee.moviesearchpj.serachrecord.SearchRecordFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -16,13 +15,13 @@ class MainActivity : AppCompatActivity() {
             setContentView(it.root)
         }
         createFragment(savedInstanceState)
-
+        //최초 화면
         supportFragmentManager.beginTransaction().add(R.id.tabContent,searchMovieFragment).commit()
-        //초기 보여질 화면
     }
+
     private fun createFragment(savedInstanceState: Bundle?){
         if(savedInstanceState == null){
-            searchMovieFragment = SearchMovieFragment()
+            searchMovieFragment = SearchMovieFragment(this.application)
         }
     }
 }

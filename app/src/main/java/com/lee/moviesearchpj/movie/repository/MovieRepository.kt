@@ -1,4 +1,4 @@
-package com.lee.moviesearchpj.movie
+package com.lee.moviesearchpj.movie.repository
 
 import com.lee.moviesearchpj.movie.network.MovieService
 
