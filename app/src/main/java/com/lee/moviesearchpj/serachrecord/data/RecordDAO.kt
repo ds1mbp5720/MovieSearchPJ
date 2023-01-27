@@ -10,11 +10,11 @@ interface RecordDAO {
     @Insert
     fun insertRecord(record: Record)
 
-    @Query("SELECT * FROM record_tbl WHERE recordText = :name")
-    fun findRecord(name: String): List<Record>
+    @Query("SELECT * FROM record_tbl WHERE recordId = :id")
+    fun findRecord(id: Int): List<Record>
 
-    @Query("DELETE FROM record_tbl WHERE recordText = :name")
-    fun deleteRecord(name: String)
+    @Query("DELETE FROM record_tbl WHERE recordId = :id")
+    fun deleteRecord(id: Int)
 
     @Query("SELECT * FROM record_tbl")
     fun getAllRecord(): LiveData<List<Record>>

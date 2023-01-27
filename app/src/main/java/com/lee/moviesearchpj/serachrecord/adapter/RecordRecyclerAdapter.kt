@@ -26,15 +26,15 @@ class RecordRecyclerAdapter(private val searchRecordFragment: SearchRecordFragme
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setProductList(products: List<Record>){
-        recordList = products.toMutableList()
+    fun setRecordsList(records: List<Record>){
+        recordList = records.toMutableList()
         notifyDataSetChanged()
     }
 
     // 검색기록 10개 이상시 삭제 함수
     private fun checkRecordCnt(){
         if(itemCount > 10){
-            searchRecordFragment.viewModel.deleteProduct(recordList?.get(0)?.recordText.toString())
+            searchRecordFragment.viewModel.deleteRecord(recordList?.get(0)?.id!!.toInt())
         }
     }
     override fun getItemCount() = if(recordList == null) 0 else recordList!!.size

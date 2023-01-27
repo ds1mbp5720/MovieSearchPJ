@@ -28,12 +28,12 @@ class RecordRepository(application: Application) {
     private fun asyncInsert(record: Record){
         recordDao?.insertRecord(record)
     }
-    fun deleteRecord(name: String){
+    fun deleteRecord(id: Int){
         coroutineScope.launch(Dispatchers.IO){
-            asyncDelete(name)
+            asyncDelete(id)
         }
     }
-    private fun asyncDelete(name:String){
-        recordDao?.deleteRecord(name)
+    private fun asyncDelete(id:Int){
+        recordDao?.deleteRecord(id)
     }
 }

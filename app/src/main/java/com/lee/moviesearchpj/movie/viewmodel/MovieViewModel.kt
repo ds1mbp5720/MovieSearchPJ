@@ -1,6 +1,8 @@
 package com.lee.moviesearchpj.movie.viewmodel
 
 import android.app.Application
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lee.moviesearchpj.movie.data.MovieData
@@ -11,7 +13,8 @@ import kotlinx.coroutines.*
 
 
 class MovieViewModel(private val repository: MovieRepository, private val application: Application):ViewModel(){
-    val movieList = MutableLiveData<MovieData>() // rest api 저장
+    var movieList = MutableLiveData<MovieData>() // rest api 저장
+    private lateinit var itemList:MovieData
     val errorMessage = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
     private val recordRepository: RecordRepository = RecordRepository(application)
@@ -28,6 +31,25 @@ class MovieViewModel(private val repository: MovieRepository, private val applic
             withContext(Dispatchers.Main){
                 if(response.isSuccessful){
                     movieList.postValue(response.body())
+                    itemList = response.body()!!
+                    isLoading.postValue(false)
+                }else{
+                    onError("에러내용:  $response")
+                }
+            }
+        }
+    }
+    // api 정보 수신 함수
+    fun addAllMovieFromViewModel(text: String, start:Int){
+        job = CoroutineScope(Dispatchers.IO).launch(exceptionHandler) {
+            isLoading.postValue(true)
+            val response = repository.getMovieInfo(text,start) // 검색어, 시작 번호
+            withContext(Dispatchers.Main){
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        itemList.items.addAll(response.body()!!.items)
+                        movieList.value = itemList
+                    }
                     isLoading.postValue(false)
                 }else{
                     onError("에러내용:  $response")

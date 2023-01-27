@@ -1,8 +1,10 @@
 package com.lee.moviesearchpj.movie
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lee.moviesearchpj.R
 import com.lee.moviesearchpj.databinding.SearchMovieFragmentBinding
 import com.lee.moviesearchpj.movie.adapter.MovieRecyclerAdapter
@@ -28,7 +32,10 @@ class SearchMovieFragment(var application: Application):Fragment() {
     }
     private lateinit var binding: SearchMovieFragmentBinding
     private lateinit var viewModel: MovieViewModel
+    private lateinit var poiAdapter:MovieRecyclerAdapter
     private var recordText: String = ""
+    private lateinit var searchingText: String
+    private var pagingCnt = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +62,10 @@ class SearchMovieFragment(var application: Application):Fragment() {
         viewModel.movieList.observe(viewLifecycleOwner){
             with(binding.movieRecycler){
                 run{
-                    val poiAdapter = MovieRecyclerAdapter(it,this@SearchMovieFragment)
+                    recyclerSetup()
+                    poiAdapter = MovieRecyclerAdapter(it,this@SearchMovieFragment)
                     adapter = poiAdapter
+                    scrollToPosition(pagingCnt*10 -4)
                 }
             }
             binding.progressBar.visibility = View.GONE // rest 완료시 progressbar 제거
@@ -72,18 +81,40 @@ class SearchMovieFragment(var application: Application):Fragment() {
             }
         }
     }
-
+    // 페이징 처리를 위한 스크롤 리스너
+    private fun recyclerSetup(){
+        with(binding.movieRecycler){
+            clearOnScrollListeners() // 리스너 중복으로 인한 초기화
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                val totalCnt = viewModel.movieList.value?.total // data 총 갯수 저장 변수
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+                    val itemTotalCount = recyclerView.adapter?.itemCount
+                    if (totalCnt != null) {
+                        // 페이징 조건
+                        if (lastVisibleItemPosition+1 == itemTotalCount && totalCnt - pagingCnt*10 > 10) {
+                            pagingCnt ++
+                            viewModel.addAllMovieFromViewModel(searchingText,(pagingCnt*10)+1)
+                        }
+                    }
+                }
+            })
+        }
+    }
     private fun listenerSetup() {
         with(binding){
             //검색 버튼 이벤트
             searchBtn.setOnClickListener{
-                val searchText = binding.searchText.text.toString()
+                pagingCnt = 0
+                searchingText = binding.searchText.text.toString()
                 // api 통신
-                viewModel.getAllMovieFromViewModel(searchText,1)
+                viewModel.getAllMovieFromViewModel(searchingText,1)
 
                 // 검색어 저장
-                if(searchText.isNotEmpty()){
-                    viewModel.insertRecord(Record(searchText))
+                if(searchingText.isNotEmpty()){
+                    viewModel.insertRecord(Record(searchingText))
                 }else{ // 검색어 미 입력시
                     Toast.makeText(activity,"검색어를 입력하세요.",Toast.LENGTH_SHORT).show()
                 }
@@ -102,6 +133,7 @@ class SearchMovieFragment(var application: Application):Fragment() {
             recordText= bundle.getString("recordText").toString()
             if(recordText.isNotEmpty()){ // 값을 받을경우
                 binding.searchText.setText(recordText)
+                searchingText = recordText
                 // api 통신
                 viewModel.getAllMovieFromViewModel(recordText,1)
             }
@@ -111,6 +143,7 @@ class SearchMovieFragment(var application: Application):Fragment() {
     private fun pressBackKey(){
         activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.e(TAG,"뒤로가기 터치")
                 activity!!.finish()
             }
         })

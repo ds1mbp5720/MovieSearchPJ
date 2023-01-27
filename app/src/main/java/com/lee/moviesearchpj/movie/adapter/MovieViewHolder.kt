@@ -1,10 +1,8 @@
 package com.lee.moviesearchpj.movie.adapter
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,7 +23,6 @@ class MovieViewHolder(private val binding: MovieInfoRecyclerBinding): RecyclerVi
     fun setListener(link: String) = with(binding){
         root.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
-            Log.e(TAG,"$link")
             intent.data = Uri.parse("$link/")
             startActivity(itemView.context,intent,null)
         }

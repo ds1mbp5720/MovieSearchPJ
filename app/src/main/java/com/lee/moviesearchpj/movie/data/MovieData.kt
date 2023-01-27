@@ -2,7 +2,7 @@ package com.lee.moviesearchpj.movie.data
 
 data class MovieData(
     val display: Int,
-    val items: List<Item>,
+    var items: MutableList<Item>,
     val lastBuildDate: String,
     val start: Int,
     val total: Int
