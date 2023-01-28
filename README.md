@@ -22,6 +22,10 @@
 ------------
 ### 실행사진
 
+https://user-images.githubusercontent.com/37658906/215275028-82733bdb-45b7-4cb7-8073-972aee3d9780.mp4
+
+https://user-images.githubusercontent.com/37658906/215275418-2127319a-7924-42f1-bc98-2ab94ce6568c.mp4
+
 
 
 
