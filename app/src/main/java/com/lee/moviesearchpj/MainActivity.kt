@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             searchRecordFragment= SearchRecordFragment.newInstance()
         }
     }
+
     fun changeFragment(signal: Boolean){
         if(signal){ // 최근검색 버튼 터치
             supportFragmentManager.beginTransaction().show(searchRecordFragment).hide(searchMovieFragment).commit()
@@ -39,11 +40,11 @@ class MainActivity : AppCompatActivity() {
             pressBackKey(false)
         }
     }
-    // app 완전 종료 버튼
+    // 상황별 back key 설정 함수
     private fun pressBackKey(signal: Boolean){
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(signal){
+                if(signal){ // SearchRecordFragment 이동
                     supportFragmentManager.beginTransaction().show(searchMovieFragment).hide(searchRecordFragment).commit()
                     pressBackKey(false)
                 }else{

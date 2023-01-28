@@ -31,7 +31,7 @@ class RecordRecyclerAdapter(private val searchRecordFragment: SearchRecordFragme
         notifyDataSetChanged()
     }
 
-    // 검색기록 10개 이상시 삭제 함수
+    // 검색기록 10개 초과시 삭제 함수
     private fun checkRecordCnt(){
         if(itemCount > 10){
             searchRecordFragment.viewModel.deleteRecordByID(recordList?.get(0)?.id!!.toInt())

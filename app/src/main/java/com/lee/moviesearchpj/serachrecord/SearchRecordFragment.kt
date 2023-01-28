@@ -36,8 +36,8 @@ class SearchRecordFragment:Fragment() {
     }
 
     private fun observerSetup(){
-        viewModel.getAllRecords()?.observe(viewLifecycleOwner){ products ->
-            products?.let {
+        viewModel.getAllRecords()?.observe(viewLifecycleOwner){ records ->
+            records?.let {
                 recordAdapter?.setRecordsList(it)
             }
         }

@@ -15,8 +15,8 @@ class RecordRepository(application: Application) {
     val allRecords: LiveData<List<Record>>?
 
     init {
-        val db: RecordRoomDatabase? = RecordRoomDatabase.getDatabase(application)
-        recordDao = db?.recordDao()
+        val db: RecordRoomDatabase = RecordRoomDatabase.getDatabase(application)
+        recordDao = db.recordDao()
         allRecords = recordDao?.getAllRecord()
     }
     // data 입력 함수

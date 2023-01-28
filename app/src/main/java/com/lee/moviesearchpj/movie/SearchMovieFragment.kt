@@ -33,7 +33,7 @@ class SearchMovieFragment(private val application: Application):Fragment() {
     }
     private lateinit var binding: SearchMovieFragmentBinding
     private lateinit var viewModel: MovieViewModel
-    private lateinit var poiAdapter:MovieRecyclerAdapter
+    private lateinit var movieRecyclerAdapter:MovieRecyclerAdapter
     private var recordText: String = ""
     private lateinit var searchingText: String
     private var pagingCnt = 0
@@ -50,8 +50,7 @@ class SearchMovieFragment(private val application: Application):Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, MovieViewModelFactory(
-            MovieRepository(MovieService.getInstance()), application
-        )
+            MovieRepository(MovieService.getInstance()), application)
         )[MovieViewModel::class.java]
         getRecord()
         observeSetup()
@@ -63,8 +62,8 @@ class SearchMovieFragment(private val application: Application):Fragment() {
             with(binding.movieRecycler){
                 run{
                     recyclerSetup()
-                    poiAdapter = MovieRecyclerAdapter(it,this@SearchMovieFragment)
-                    adapter = poiAdapter
+                    movieRecyclerAdapter = MovieRecyclerAdapter(it)
+                    adapter = movieRecyclerAdapter
                     scrollState
                     scrollToPosition(pagingCnt*10 -5)
                 }
@@ -82,7 +81,7 @@ class SearchMovieFragment(private val application: Application):Fragment() {
             }
         }
     }
-    // 페이징 처리를 위한 스크롤 리스너
+    // 최 하단부 도달시 페이징 처리를 위한 스크롤 리스너
     private fun recyclerSetup(){
         with(binding.movieRecycler){
             clearOnScrollListeners() // 리스너 중복으로 인한 초기화
@@ -94,7 +93,7 @@ class SearchMovieFragment(private val application: Application):Fragment() {
                     val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
                     val itemTotalCount = recyclerView.adapter?.itemCount
                     if (totalCnt != null) {
-                        // 페이징 조건
+                        // 페이징 조건, 스크롤 위치확인과 요청할 데이터가 있는지 확인
                         if (lastVisibleItemPosition+1 == itemTotalCount && totalCnt - pagingCnt*10 > 10) {
                             pagingCnt ++
                             viewModel.addAllMovieFromViewModel(searchingText,(pagingCnt*10)+1)
@@ -106,23 +105,25 @@ class SearchMovieFragment(private val application: Application):Fragment() {
     }
     private fun listenerSetup() {
         with(binding){
+            // 키보드 내부 검색 버튼 리스너
             searchText.setOnEditorActionListener { _, actionID, _ ->
                 if(actionID == EditorInfo.IME_ACTION_SEARCH){
                     searchAction()
                 }
                 true
             }
-            //검색 버튼 이벤트
+            //검색 버튼 리스너
             searchBtn.setOnClickListener{
                 searchAction()
             }
-            // 최근 검색 버튼 이벤트
+            // 최근 검색 버튼 리스너
             recordBtn.setOnClickListener{
                 (requireActivity() as MainActivity).changeFragment(true)
             }
         }
     }
     // 최근 검색 버튼 클릭시 값 수신 함수
+    // 값을 수신했을 경우 변수 초기화, Text 설정, 재호출
     private fun getRecord(){
         setFragmentResultListener("selectRecord"){ _, bundle ->
             recordText= bundle.getString("recordText").toString()
@@ -130,7 +131,6 @@ class SearchMovieFragment(private val application: Application):Fragment() {
                 pagingCnt = 0
                 binding.searchText.setText(recordText)
                 searchingText = recordText
-                // api 통신
                 viewModel.getAllMovieFromViewModel(recordText,1)
             }
         }

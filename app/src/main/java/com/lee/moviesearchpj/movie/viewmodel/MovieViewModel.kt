@@ -1,8 +1,6 @@
 package com.lee.moviesearchpj.movie.viewmodel
 
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lee.moviesearchpj.movie.data.MovieData
@@ -12,11 +10,11 @@ import com.lee.moviesearchpj.serachrecord.repository.RecordRepository
 import kotlinx.coroutines.*
 
 
-class MovieViewModel(private val repository: MovieRepository, private val application: Application):ViewModel(){
+class MovieViewModel(private val repository: MovieRepository, application: Application):ViewModel(){
     var movieList = MutableLiveData<MovieData>() // rest api 저장
     private lateinit var itemList:MovieData
     val errorMessage = MutableLiveData<String>()
-    val isLoading = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>() // progressbar 제공목적 변수
     private val recordRepository: RecordRepository = RecordRepository(application)
     private var job : Job? = null
 

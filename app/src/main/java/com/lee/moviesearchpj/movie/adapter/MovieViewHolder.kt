@@ -14,20 +14,21 @@ class MovieViewHolder(private val binding: MovieInfoRecyclerBinding): RecyclerVi
     @SuppressLint("SetTextI18n")
     fun setView(movie : MovieData.Item)= with(binding){
         moviePoster
-        movieTitle.text = "제목: " + filterTitleText(movie.title)
-        movieDate.text = "출시일: " + movie.pubDate
+        movieTitle.text ="제목: " + filterTitleText(movie.title)
+        movieDate.text = "출시: " + movie.pubDate
         movieScore.text = "평점: " + movie.userRating
         Glide.with(this.moviePoster.context).load(movie.image).into(this.moviePoster)// 이미지 처리
     }
-    // 포스터 상세보기 이동 정의
+
     fun setListener(link: String) = with(binding){
+        // uri 통한 영화 상세보기 이동 정의
         root.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse("$link/")
             startActivity(itemView.context,intent,null)
         }
     }
-    //영화 제목 <b> </b> 제거
+    //영화 제목 <b> </b> 제거 함수
     private fun filterTitleText(title: String):String{
         var combineString = ""
         return if(title.contains("<b>")){

@@ -9,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-const val POI_ADDRESS = "https://openapi.naver.com/"
+const val MOVIE_ADDRESS = "https://openapi.naver.com/"
 
 interface MovieService{
 
@@ -27,7 +27,7 @@ interface MovieService{
         fun getInstance() : MovieService {
             if (retrofitService == null) {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl(POI_ADDRESS)
+                    .baseUrl(MOVIE_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 retrofitService = retrofit.create(MovieService::class.java)
