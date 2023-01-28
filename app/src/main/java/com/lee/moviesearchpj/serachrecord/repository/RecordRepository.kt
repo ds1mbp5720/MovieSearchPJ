@@ -28,12 +28,22 @@ class RecordRepository(application: Application) {
     private fun asyncInsert(record: Record){
         recordDao?.insertRecord(record)
     }
-    fun deleteRecord(id: Int){
+    // id 기준 삭제 함수
+    fun deleteRecordByID(id: Int){
         coroutineScope.launch(Dispatchers.IO){
-            asyncDelete(id)
+            asyncDeleteByID(id)
         }
     }
-    private fun asyncDelete(id:Int){
-        recordDao?.deleteRecord(id)
+    private fun asyncDeleteByID(id:Int){
+        recordDao?.deleteRecordByID(id)
+    }
+    // 이름 기준 삭제 함수
+    fun deleteRecordByName(text: String){
+        coroutineScope.launch(Dispatchers.IO){
+            asyncDeleteByName(text)
+        }
+    }
+    private fun asyncDeleteByName(text:String){
+        recordDao?.deleteRecordByName(text)
     }
 }

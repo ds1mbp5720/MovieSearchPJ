@@ -10,8 +10,8 @@ class RecordViewModel(application: Application): AndroidViewModel(application) {
     private val repository: RecordRepository = RecordRepository(application)
     private val allRecords: LiveData<List<Record>>? = repository.allRecords
 
-    fun deleteRecord(id: Int){
-        repository.deleteRecord(id)
+    fun deleteRecordByID(id: Int){
+        repository.deleteRecordByID(id)
     }
     fun getAllRecords(): LiveData<List<Record>>?{
         return allRecords

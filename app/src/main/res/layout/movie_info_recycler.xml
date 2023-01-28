@@ -22,7 +22,7 @@
                 android:id="@+id/movie_textbox"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="start"
                 android:orientation="vertical"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -32,9 +32,9 @@
                     android:id="@+id/movie_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제목"
+                    android:text="@string/movie_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textSize="15dp"
+                    android:textSize="15sp"
                     android:maxLines="2"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -43,9 +43,9 @@
                     android:id="@+id/movie_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="출시"
+                    android:text="@string/movie_date"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textSize="12dp"
+                    android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/movie_title" />
 
@@ -53,9 +53,9 @@
                     android:id="@+id/movie_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="평점"
+                    android:text="@string/movie_score"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textSize="12dp"
+                    android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/movie_date" />
             </LinearLayout>

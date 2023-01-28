@@ -24,22 +24,22 @@
             android:id="@+id/search_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:hint="검색어 입력"
+            android:hint="@string/searchText_hint"
             android:singleLine="true"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionSearch"
             android:layout_weight="1"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/search_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="검색"/>
+            android:text="@string/search_btn"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/record_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="최근검색"/>
+            android:text="@string/record_btn"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movie_recycler"

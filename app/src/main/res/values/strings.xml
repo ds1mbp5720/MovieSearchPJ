@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">MovieSearchPJ</string>
+
+    <string name="empty_searchText">검색어를 입력하세요.</string>
+
+    <string name="search_btn">검색</string>
+    <string name="record_btn">최근 검색</string>
+    <string name="searchText_hint">검색어 입력</string>
+
+    <string name="movie_title">제목</string>
+    <string name="movie_date">출시</string>
+    <string name="movie_score">평점</string>
+
+    <string name="search_record_title">최근 검색 이력</string>
 </resources>

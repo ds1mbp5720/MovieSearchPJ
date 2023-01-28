@@ -3,19 +3,21 @@ package com.lee.moviesearchpj.movie
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentValues.TAG
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lee.moviesearchpj.MainActivity
 import com.lee.moviesearchpj.R
 import com.lee.moviesearchpj.databinding.SearchMovieFragmentBinding
 import com.lee.moviesearchpj.movie.adapter.MovieRecyclerAdapter
@@ -23,10 +25,9 @@ import com.lee.moviesearchpj.movie.network.MovieService
 import com.lee.moviesearchpj.movie.repository.MovieRepository
 import com.lee.moviesearchpj.movie.viewmodel.MovieViewModel
 import com.lee.moviesearchpj.movie.viewmodel.MovieViewModelFactory
-import com.lee.moviesearchpj.serachrecord.SearchRecordFragment
 import com.lee.moviesearchpj.serachrecord.data.Record
 
-class SearchMovieFragment(var application: Application):Fragment() {
+class SearchMovieFragment(private val application: Application):Fragment() {
     companion object{
         fun newInstance(application: Application) = SearchMovieFragment(application)
     }
@@ -41,7 +42,7 @@ class SearchMovieFragment(var application: Application):Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View{
         binding = SearchMovieFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,7 +56,6 @@ class SearchMovieFragment(var application: Application):Fragment() {
         getRecord()
         observeSetup()
         listenerSetup()
-        pressBackKey()
     }
 
     private fun observeSetup(){
@@ -65,7 +65,8 @@ class SearchMovieFragment(var application: Application):Fragment() {
                     recyclerSetup()
                     poiAdapter = MovieRecyclerAdapter(it,this@SearchMovieFragment)
                     adapter = poiAdapter
-                    scrollToPosition(pagingCnt*10 -4)
+                    scrollState
+                    scrollToPosition(pagingCnt*10 -5)
                 }
             }
             binding.progressBar.visibility = View.GONE // rest 완료시 progressbar 제거
@@ -105,25 +106,19 @@ class SearchMovieFragment(var application: Application):Fragment() {
     }
     private fun listenerSetup() {
         with(binding){
+            searchText.setOnEditorActionListener { _, actionID, _ ->
+                if(actionID == EditorInfo.IME_ACTION_SEARCH){
+                    searchAction()
+                }
+                true
+            }
             //검색 버튼 이벤트
             searchBtn.setOnClickListener{
-                pagingCnt = 0
-                searchingText = binding.searchText.text.toString()
-                // api 통신
-                viewModel.getAllMovieFromViewModel(searchingText,1)
-
-                // 검색어 저장
-                if(searchingText.isNotEmpty()){
-                    viewModel.insertRecord(Record(searchingText))
-                }else{ // 검색어 미 입력시
-                    Toast.makeText(activity,"검색어를 입력하세요.",Toast.LENGTH_SHORT).show()
-                }
+                searchAction()
             }
             // 최근 검색 버튼 이벤트
             recordBtn.setOnClickListener{
-                // 최근 기록 fragment 화면으로 변경
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.tabContent,SearchRecordFragment.newInstance())?.addToBackStack(null)?.commit()
+                (requireActivity() as MainActivity).changeFragment(true)
             }
         }
     }
@@ -132,6 +127,7 @@ class SearchMovieFragment(var application: Application):Fragment() {
         setFragmentResultListener("selectRecord"){ _, bundle ->
             recordText= bundle.getString("recordText").toString()
             if(recordText.isNotEmpty()){ // 값을 받을경우
+                pagingCnt = 0
                 binding.searchText.setText(recordText)
                 searchingText = recordText
                 // api 통신
@@ -139,13 +135,20 @@ class SearchMovieFragment(var application: Application):Fragment() {
             }
         }
     }
-    // app 완전 종료 버튼
-    private fun pressBackKey(){
-        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                Log.e(TAG,"뒤로가기 터치")
-                activity!!.finish()
-            }
-        })
+    //검색기능 함수
+    private fun searchAction(){
+        val inputMethodManager = activity?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        pagingCnt = 0
+        searchingText = binding.searchText.text.toString()
+        // api 통신
+        viewModel.getAllMovieFromViewModel(searchingText,1)
+        // 검색어 저장
+        if(searchingText.isNotEmpty()){
+            viewModel.deleteDuplicate(Record(searchingText))
+            viewModel.insertRecord(Record(searchingText))
+            inputMethodManager.hideSoftInputFromWindow(binding.searchText.windowToken, 0)
+        }else{ // 검색어 미 입력시
+            Toast.makeText(activity, R.string.empty_searchText,Toast.LENGTH_SHORT).show()
+        }
     }
 }

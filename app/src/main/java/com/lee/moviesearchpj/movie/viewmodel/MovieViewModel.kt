@@ -57,6 +57,10 @@ class MovieViewModel(private val repository: MovieRepository, private val applic
             }
         }
     }
+    // room 검색기록 중복 제거
+    fun deleteDuplicate(searchText: Record){
+        recordRepository.deleteRecordByName(searchText.recordText.toString())
+    }
     // room 검색기록 저장 함수
     fun insertRecord(searchText: Record){
         recordRepository.insertRecord(searchText)

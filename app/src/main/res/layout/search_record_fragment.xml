@@ -9,8 +9,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        app:layout_constraintTop_toTopOf="parent"
-       android:text="최근 검색 이력"
-       android:textSize="20dp"
+       android:text="@string/search_record_title"
+       android:textSize="20sp"
        android:gravity="center"/>
 
    <androidx.recyclerview.widget.RecyclerView
@@ -19,6 +19,5 @@
        android:layout_height="wrap_content"
        app:layout_constraintTop_toBottomOf="@id/search_record_title"
        android:layout_marginTop="20dp"
-       tools:listitem="@layout/search_record_recycler"
-       app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+       tools:listitem="@layout/search_record_recycler"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
